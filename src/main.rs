@@ -10,9 +10,11 @@ error_chain! {
      }
 }
 fn main() {
-    // get current directory
-    // TODO: create a temp directory using the  Builder::new().prefix("example").tempdir()?;
-    let temp_dir = std::env::current_dir().unwrap();
+    // create a temp directory
+    let temp_dir = Builder::new().prefix("example").tempdir().unwrap();
+    // current directory
+    let current_dir = std::env::current_dir().unwrap();
+    println!("{}", temp_dir.path().display());
     let url = "https://images.unsplash.com/photo-1606313564200-e75d5e30476c?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=774&q=80.png";
     let mut response = reqwest::blocking::get(url).unwrap();
 
@@ -23,9 +25,14 @@ fn main() {
         .and_then(|segments| segments.last())
         .unwrap_or("tmp.bin");
 
-    let fname = temp_dir.join(file_name);
+    let fname = temp_dir.path().join(file_name);
+    let mut fname_curr_dir = current_dir.join(file_name);
     // create a file in temp_dir
     let mut file = File::create(fname).unwrap();
+    let mut file_current_dir = File::create(fname_curr_dir).unwrap();
+
     // copy the response to the file
     io::copy(&mut response, &mut file).unwrap();
+
+    io::copy(&mut response, &mut file_current_dir).unwrap();
 }
