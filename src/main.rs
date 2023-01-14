@@ -1,6 +1,6 @@
 use error_chain::error_chain;
 use std::fs::File;
-use std::io;
+use std::io::{self, SeekFrom};
 use tempfile::Builder;
 
 error_chain! {
@@ -33,6 +33,7 @@ fn main() {
 
     // copy the response to the file
     io::copy(&mut response, &mut file).unwrap();
-
-    io::copy(&mut response, &mut file_current_dir).unwrap();
+    // TODO: write the response to another file in the root directory
+    // file_current_dir.seek(SeekFrom::Start(0)).unwrap();
+    // io::copy(&mut response, &mut file_current_dir).unwrap();
 }
