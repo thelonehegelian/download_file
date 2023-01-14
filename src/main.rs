@@ -2,6 +2,7 @@ use error_chain::error_chain;
 use std::fs::File;
 use std::io::{self, SeekFrom};
 use tempfile::Builder;
+use tokio;
 
 error_chain! {
      foreign_links {
@@ -9,6 +10,7 @@ error_chain! {
          HttpRequest(reqwest::Error);
      }
 }
+
 fn main() {
     // create a temp directory
     let temp_dir = Builder::new().prefix("example").tempdir().unwrap();
